@@ -9,6 +9,6 @@ setup(
     packages=['easy_pixie'],
     description='A tool to simplify the use of python graphic library pixie-python.',
     install_requires=[
-        'pixie>=4.3.0'
+        'pixie-python>=4.3.0'
     ]
 )
