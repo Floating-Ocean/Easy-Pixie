@@ -22,4 +22,4 @@ jobs:
         pip install pixie-python
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=R0912,R0913,R0914,R0917 $(git ls-files '*.py')
+        pylint $(git ls-files '*.py')
