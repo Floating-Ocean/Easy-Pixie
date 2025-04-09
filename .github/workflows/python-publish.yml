@@ -70,3 +70,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
+          oidc: false
+          password: ${{ secrets.API_KEY }}
