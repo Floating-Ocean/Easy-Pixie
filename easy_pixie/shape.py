@@ -1,3 +1,8 @@
+"""
+有关图形的工具类 shape.py
+Copyright (c) 2025 Floating Ocean. License under MIT.
+"""
+
 from enum import Enum
 
 import pixie
@@ -5,7 +10,8 @@ import pixie
 from .color import apply_tint
 
 
-def draw_rect(image: pixie.Image, paint: pixie.Paint, x: int, y: int, width: int, height: int, round_size: float = 0):
+def draw_rect(image: pixie.Image, paint: pixie.Paint, x: int, y: int,
+              width: int, height: int, round_size: float = 0):
     """
     绘制一个矩形，可指定圆角大小
     """
@@ -24,21 +30,23 @@ class GradientDirection(Enum):
     DIAGONAL_LEFT_TO_RIGHT: 沿对角线从左上往右下
     DIAGONAL_RIGHT_TO_LEFT: 沿对角线从左下往右上
     """
-    VERTICAL = 0,
-    HORIZONTAL = 1,
-    DIAGONAL_LEFT_TO_RIGHT = 2,
+    VERTICAL = 0
+    HORIZONTAL = 1
+    DIAGONAL_LEFT_TO_RIGHT = 2
     DIAGONAL_RIGHT_TO_LEFT = 3
 
 
 def draw_gradient_rect(image: pixie.Image, x: int, y: int, width: int, height: int,
-                       colors: list[str], positions: list[float], direction: GradientDirection, round_size: float = 0):
+                       colors: list[str], positions: list[float],
+                       direction: GradientDirection, round_size: float = 0):
     """
     绘制一个渐变矩形，可指定渐变方向，圆角大小
     """
-    paint = pixie.Paint(pixie.LINEAR_GRADIENT_PAINT if len(colors) == 2 else pixie.RADIAL_GRADIENT_PAINT)  # 渐变色画笔
+    paint = pixie.Paint(pixie.LINEAR_GRADIENT_PAINT if len(colors) == 2 else
+                        pixie.RADIAL_GRADIENT_PAINT)  # 渐变色画笔
 
-    for idx in range(len(colors)):
-        color = pixie.parse_color(colors[idx])
+    for idx, raw_color in enumerate(colors):
+        color = pixie.parse_color(raw_color)
 
         if direction == GradientDirection.VERTICAL:
             position = pixie.Vector2(x + width / 2,
@@ -59,8 +67,8 @@ def draw_gradient_rect(image: pixie.Image, x: int, y: int, width: int, height: i
     draw_rect(image, paint, x, y, width, height, round_size)
 
 
-def draw_mask_rect(image: pixie.Image, x: int, y: int, width: int, height: int, color: pixie.Color,
-                   round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
+def draw_mask_rect(image: pixie.Image, x: int, y: int, width: int, height: int,
+                   color: pixie.Color, round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
     """
     绘制一个蒙版矩形，可指定圆角大小
     """
@@ -71,7 +79,8 @@ def draw_mask_rect(image: pixie.Image, x: int, y: int, width: int, height: int, 
     image.draw(mask, pixie.translate(x, y), blend_mode)
 
 
-def draw_img(img: pixie.Image, img_path: str, x: int, y: int, img_size: tuple[int, int], color: pixie.Color):
+def draw_img(img: pixie.Image, img_path: str, x: int, y: int, img_size: tuple[int, int],
+             color: pixie.Color):
     """
     绘制一个带着色的纯色图片
     """

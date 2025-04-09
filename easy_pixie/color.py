@@ -1,3 +1,8 @@
+"""
+有关颜色的工具类 color.py
+Copyright (c) 2025 Floating Ocean. License under MIT.
+"""
+
 import random
 from typing import TypedDict
 
@@ -28,6 +33,9 @@ def apply_tint(image_path: str, tint: pixie.Color) -> pixie.Image:
 
 
 class GradientColor(TypedDict):
+    """
+    单个渐变色
+    """
     name: str
     colors: list[str]
 
@@ -80,8 +88,8 @@ def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
     """
     if len(color) == 3:
         return pixie.Color(color[0], color[1], color[2], 1)
-    else:
-        return pixie.Color(color[0], color[1], color[2], color[3])
+
+    return pixie.Color(color[0], color[1], color[2], color[3])
 
 
 def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int, ...]:
@@ -90,5 +98,5 @@ def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int,
     """
     if include_alpha:
         return round(color.r * 255), round(color.g * 255), round(color.b * 255), round(color.a * 255)
-    else:
-        return round(color.r * 255), round(color.g * 255), round(color.b * 255)
+
+    return round(color.r * 255), round(color.g * 255), round(color.b * 255)

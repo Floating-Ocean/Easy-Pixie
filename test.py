@@ -1,3 +1,7 @@
+"""
+单元测试
+"""
+
 import unittest
 
 import pixie
@@ -6,7 +10,13 @@ from easy_pixie import draw_text, StyledString
 
 
 class Test(unittest.TestCase):
+    """
+    测试一些基础功能
+    """
     def test_font(self):
+        """
+        测试字体
+        """
         output_img = pixie.Image(400, 200)
         output_img.fill(pixie.Color(1, 1, 1, 1))
 

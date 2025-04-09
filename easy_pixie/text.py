@@ -1,3 +1,8 @@
+"""
+有关文本的工具类 text.py
+Copyright (c) 2025 Floating Ocean. License under MIT.
+"""
+
 import os
 import re
 
