@@ -97,6 +97,7 @@ def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int,
     转换 pixie.Color 为 rgb/rgba 元组
     """
     if include_alpha:
-        return round(color.r * 255), round(color.g * 255), round(color.b * 255), round(color.a * 255)
+        return (round(color.r * 255), round(color.g * 255), round(color.b * 255),
+                round(color.a * 255))
 
     return round(color.r * 255), round(color.g * 255), round(color.b * 255)
