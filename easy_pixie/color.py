@@ -4,6 +4,7 @@ Copyright (c) 2025 Floating Ocean. License under MIT.
 """
 
 import random
+from dataclasses import dataclass
 from typing import TypedDict
 
 import pixie
@@ -32,7 +33,7 @@ def apply_tint(image_path: str, tint: pixie.Color) -> pixie.Image:
     return tinted_image
 
 
-class GradientColor(TypedDict):
+class GradientItem(TypedDict):
     """
     单个渐变色
     """
@@ -40,7 +41,17 @@ class GradientColor(TypedDict):
     colors: list[str]
 
 
-def pick_gradient_color(colors: list[GradientColor]) -> tuple[list[str], list[float], str]:
+@dataclass
+class GradientColor:
+    """
+    打包后的单个渐变色数据类
+    """
+    color_list: list[str]
+    pos_list: list[float]
+    name: str
+
+
+def pick_gradient_color(colors: list[GradientItem]) -> GradientColor:
     """
     从渐变色列表中选择一个颜色，只支持 2~3 种颜色
 
@@ -61,7 +72,7 @@ def pick_gradient_color(colors: list[GradientColor]) -> tuple[list[str], list[fl
         picked_colors.reverse()
 
     position_list = [0.0, 1.0] if len(picked_colors) == 2 else [0.0, 0.5, 1.0]
-    return picked_colors, position_list, color_name
+    return GradientColor(picked_colors, position_list, color_name)
 
 
 def choose_text_color(bg_color: pixie.Color) -> pixie.Color:

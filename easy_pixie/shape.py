@@ -3,21 +3,31 @@
 Copyright (c) 2025 Floating Ocean. License under MIT.
 """
 
+from dataclasses import dataclass
 from enum import Enum
 
 import pixie
 
-from .color import apply_tint
+from .color import apply_tint, GradientColor
 
 
-def draw_rect(image: pixie.Image, paint: pixie.Paint, x: int, y: int,
-              width: int, height: int, round_size: float = 0):
+@dataclass
+class Loc:
+    """绘制图形时的坐标信息"""
+    x: int
+    y: int
+    width: int
+    height: int
+
+
+def draw_rect(image: pixie.Image, paint: pixie.Paint, loc: Loc, round_size: float = 0):
     """
     绘制一个矩形，可指定圆角大小
     """
     ctx = image.new_context()
     ctx.fill_style = paint
-    ctx.rounded_rect(x, y, width, height, round_size, round_size, round_size, round_size)
+    ctx.rounded_rect(loc.x, loc.y, loc.width, loc.height,
+                     round_size, round_size, round_size, round_size)
     ctx.fill()
 
 
@@ -36,53 +46,52 @@ class GradientDirection(Enum):
     DIAGONAL_RIGHT_TO_LEFT = 3
 
 
-def draw_gradient_rect(image: pixie.Image, x: int, y: int, width: int, height: int,
-                       colors: list[str], positions: list[float],
-                       direction: GradientDirection, round_size: float = 0):
+def draw_gradient_rect(image: pixie.Image, loc: Loc,
+                       colors: GradientColor, direction: GradientDirection,
+                       round_size: float = 0):
     """
     绘制一个渐变矩形，可指定渐变方向，圆角大小
     """
-    paint = pixie.Paint(pixie.LINEAR_GRADIENT_PAINT if len(colors) == 2 else
+    paint = pixie.Paint(pixie.LINEAR_GRADIENT_PAINT if len(colors.color_list) == 2 else
                         pixie.RADIAL_GRADIENT_PAINT)  # 渐变色画笔
 
-    for idx, raw_color in enumerate(colors):
+    for idx, raw_color in enumerate(colors.color_list):
         color = pixie.parse_color(raw_color)
 
         if direction == GradientDirection.VERTICAL:
-            position = pixie.Vector2(x + width / 2,
-                                     y + height * positions[idx])
+            position = pixie.Vector2(loc.x + loc.width / 2,
+                                     loc.y + loc.height * colors.pos_list[idx])
         elif direction == GradientDirection.HORIZONTAL:
-            position = pixie.Vector2(x + width * positions[idx],
-                                     y + height / 2)
+            position = pixie.Vector2(loc.x + loc.width * colors.pos_list[idx],
+                                     loc.y + loc.height / 2)
         elif direction == GradientDirection.DIAGONAL_LEFT_TO_RIGHT:
-            position = pixie.Vector2(x + width * positions[idx],
-                                     y + height * positions[idx])
+            position = pixie.Vector2(loc.x + loc.width * colors.pos_list[idx],
+                                     loc.y + loc.height * colors.pos_list[idx])
         else:
-            position = pixie.Vector2(x + width * positions[idx],
-                                     y + height * (1.0 - positions[idx]))
+            position = pixie.Vector2(loc.x + loc.width * colors.pos_list[idx],
+                                     loc.y + loc.height * (1.0 - colors.pos_list[idx]))
 
         paint.gradient_handle_positions.append(position)
         paint.gradient_stops.append(pixie.ColorStop(color, idx))
 
-    draw_rect(image, paint, x, y, width, height, round_size)
+    draw_rect(image, paint, loc, round_size)
 
 
-def draw_mask_rect(image: pixie.Image, x: int, y: int, width: int, height: int,
+def draw_mask_rect(image: pixie.Image, loc: Loc,
                    color: pixie.Color, round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
     """
     绘制一个蒙版矩形，可指定圆角大小
     """
     paint_mask = pixie.Paint(pixie.SOLID_PAINT)  # 蒙版画笔
     paint_mask.color = color
-    mask = pixie.Image(width, height)
-    draw_rect(mask, paint_mask, 0, 0, width, height, round_size)
-    image.draw(mask, pixie.translate(x, y), blend_mode)
+    mask = pixie.Image(loc.width, loc.height)
+    draw_rect(mask, paint_mask, loc, round_size)
+    image.draw(mask, pixie.translate(loc.x, loc.y), blend_mode)
 
 
-def draw_img(img: pixie.Image, img_path: str, x: int, y: int, img_size: tuple[int, int],
-             color: pixie.Color):
+def draw_img(img: pixie.Image, img_path: str, loc: Loc, color: pixie.Color):
     """
     绘制一个带着色的纯色图片
     """
-    tinted_img = apply_tint(img_path, color).resize(img_size[0], img_size[1])
-    img.draw(tinted_img, pixie.translate(x, y))
+    tinted_img = apply_tint(img_path, color).resize(loc.width, loc.height)
+    img.draw(tinted_img, pixie.translate(loc.x, loc.y))

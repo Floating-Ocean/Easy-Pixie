@@ -14,33 +14,63 @@ _MAX_WIDTH = 1024
 
 
 class StyledString:
-    """
-    包装类，打包文本绘制参数
-    """
+    """包装类，打包文本绘制参数"""
 
     font: pixie.Font
 
-    def __init__(self, content: str, font_weight: str, font_size: int,
-                 font_color: tuple[int, ...] | pixie.Color = (0, 0, 0, 1),
-                 line_multiplier: float = 1.0, padding_bottom: int = 0, max_width: int = -1,
-                 custom_font_path: str | None = None):
+    # 默认参数配置
+    _DEFAULTS = {
+        "font_color": pixie.Color(0, 0, 0, 1),
+        "line_multiplier": 1.0,
+        "padding_bottom": 0,
+        "max_width": -1,
+        "custom_font_path": None
+    }
+
+    def __init__(self, content: str, font_weight: str, font_size: int, **kwargs):
+        """
+        StyledString
+
+        :param content: 文本内容（必需）
+        :param font_weight: 字重 (必需, 可选: "L", "R", "M", "B", "H")
+        :param font_size: 字号
+        :param kwargs: 可选参数包括:
+            - font_color: 颜色 (支持元组或 pixie.Color, 默认: 黑色)
+            - line_multiplier: 行距倍数 (默认: 1.0)
+            - padding_bottom: 底部间距 (默认: 0)
+            - max_width: 最大宽度 (默认: -1, 指代 _MAX_WIDTH = 1024)
+            - custom_font_path: 自定义字体路径, 留空则使用 OPPOSans (默认: None)
+        """
         self.content = content
-        self.line_multiplier = line_multiplier
-        self.padding_bottom = padding_bottom
-        self.max_width = max_width
 
-        font_path = os.path.join(os.path.dirname(__file__), "data", f'OPPOSans-{font_weight}.ttf')
-        if custom_font_path is not None:
-            font_path = custom_font_path
+        config = {**self._DEFAULTS, **kwargs}
 
-        self.set_font(font_path)
-        self.set_font_size(font_size)
-        if isinstance(font_color, pixie.Color):
-            self.set_font_color(font_color)
-        elif len(font_color) == 3:
-            self.set_font_color(tuple_to_color(font_color))
+        self.line_multiplier = config["line_multiplier"]
+        self.padding_bottom = config["padding_bottom"]
+        self.max_width = config["max_width"]
 
+        font_color = config["font_color"]
+        if isinstance(font_color, tuple):
+            font_color = tuple_to_color(font_color)
+
+        font_path = config["custom_font_path"] or os.path.join(
+            os.path.dirname(__file__),
+            "data",
+            f'OPPOSans-{font_weight}.ttf'
+        )
+
+        self._init_font(font_path, font_size, font_color)
         self.height = draw_text(None, self, 0, 0, draw=False)
+
+    def _init_font(self, font_path: str, font_size: int, font_color: pixie.Color):
+        """初始化字体对象"""
+        self.set_font(font_path)
+        self.font.size = font_size
+        self.font.paint.color = font_color
+
+    def __repr__(self) -> str:
+        """调试用字符串表示"""
+        return f"<StyledString: '{self.content[:15]}...'>"
 
     def set_font(self, font_path: str):
         """
@@ -53,15 +83,11 @@ class StyledString:
             raise IOError(f"无法加载字体文件: {font_path}") from e
 
     def set_font_size(self, font_size: int):
-        """
-        设置字体大小
-        """
+        """设置字体大小"""
         self.font.size = font_size
 
     def set_font_color(self, font_color: pixie.Color):
-        """
-        设置字体颜色
-        """
+        """设置字体颜色"""
         self.font.paint.color = font_color
 
 
@@ -101,82 +127,79 @@ def calculate_height(strings: list[StyledString | None]) -> int:
     return height
 
 
-def draw_text(image: pixie.Image | None, styled_string: StyledString, x: int, y: int,
+def draw_text(image: pixie.Image | None, text: StyledString, x: int, y: int,
               draw: bool = True) -> int:
     """
     绘制文本
 
     :param image            目标图片
-    :param styled_string    包装后的文本内容
+    :param text             包装后的文本内容
     :param x                文本左上角的横坐标
     :param y                文本左上角的纵坐标
     :param draw             是否绘制
     :return                 文本基线的高度
     """
+
+    def _draw_token(token_buffer: str, current_offset: int):
+        """绘制单词"""
+        if draw and image:
+            image.fill_text(text.font, token_buffer, pixie.translate(x, y + current_offset))
+
+    def _accumulate_offset():
+        """获取行高"""
+        _text_height = text.font.layout_bounds("A").y
+        return int(_text_height * text.line_multiplier)
+
+    def _split_long_token(current_line: str) -> list[str]:
+        tokens: list[str] = re.findall(r'\s+\S+|\S+|\s+', current_line)  # 分割为单词，并把空格放在单词前面处理
+        line_width = 0
+        split_tokens = [""]
+        for token in tokens:
+            text_width = text_size(token, font=text.font)[0]
+            line_width += text_width
+
+            if line_width <= text.max_width:
+                split_tokens[-1] += token
+            else:
+                if len(split_tokens[-1]) > 0:
+                    split_tokens.append("")  # 将该单词移到下一行
+
+                if len(split_tokens) > 1:
+                    token = token.lstrip()  # 保证除了第一行，每一行开头不是空格
+                    text_width = text_size(token, font=text.font)[0]
+
+                while text_width > text.max_width:  # 简单的文本分割逻辑，一行塞不下就断开
+                    n = text_width // text.max_width
+                    cut_pos = int(len(token) // n)
+                    split_tokens[-1] = token[:cut_pos]
+                    draw_width = text_size(split_tokens[-1], font=text.font)[0]
+
+                    while draw_width > text.max_width and cut_pos > 0:  # 微调，保证不溢出
+                        cut_pos -= 1
+                        split_tokens[-1] = token[:cut_pos]
+                        draw_width = text_size(split_tokens[-1], font=text.font)[0]
+
+                    split_tokens.append("")
+                    token = token[cut_pos:]
+                    text_width -= draw_width
+
+                split_tokens[-1] = token
+                line_width = text_width
+
+        return [split for split in split_tokens if len(split) > 0]
+
     if draw and image is None:
         raise RuntimeError('Image should not be None for drawing.')
 
-    if styled_string.max_width == -1:
-        styled_string.max_width = _MAX_WIDTH
-
+    text.max_width = text.max_width if text.max_width != -1 else _MAX_WIDTH
     offset = 0
-    lines = styled_string.content.split("\n")
-    text_height = styled_string.font.layout_bounds("A").y
 
-    for line in lines:
+    for line in text.content.split("\n"):
         if not line.strip():  # 忽略空行
-            offset += int(text_height * styled_string.line_multiplier)
+            offset += _accumulate_offset()
             continue
+        for current_token in _split_long_token(line):
+            _draw_token(current_token, offset)
+            offset += _accumulate_offset()
 
-        text_width, _ = text_size(line, font=styled_string.font)
-        words: list[str] = re.findall(r'\s+\S+|\S+|\s+', line)  # 分割为单词，并把空格放在单词前面处理
-        text_to_draw = ""
-        line_x = 0
-        first_line = True
-
-        for word in words:
-            text_width, _ = text_size(word, font=styled_string.font)
-            line_x += text_width
-
-            if line_x <= styled_string.max_width:
-                text_to_draw += word
-            else:  # 将该单词移到下一行
-                if len(text_to_draw) > 0:
-                    if draw:
-                        image.fill_text(styled_string.font, text_to_draw,
-                                        pixie.translate(x, y + offset))
-                    offset += int(text_height * styled_string.line_multiplier)
-                    first_line = False
-
-                if not first_line:
-                    word = word.replace(" ", "")  # 保证除了第一行，每一行开头不是空格
-                    text_width, _ = text_size(word, font=styled_string.font)
-
-                while text_width > styled_string.max_width:  # 简单的文本分割逻辑，一行塞不下就断开
-                    n = text_width // styled_string.max_width
-                    sub_pos = int(len(word) // n)
-                    text_to_draw = word[:sub_pos]
-                    draw_width, _ = text_size(text_to_draw, font=styled_string.font)
-
-                    while draw_width > styled_string.max_width and sub_pos > 0:  # 微调，保证不溢出
-                        sub_pos -= 1
-                        text_to_draw = word[:sub_pos]
-                        draw_width, _ = text_size(text_to_draw, font=styled_string.font)
-
-                    if draw:
-                        image.fill_text(styled_string.font, text_to_draw,
-                                        pixie.translate(x, y + offset))
-                    offset += int(text_height * styled_string.line_multiplier)
-                    first_line = False
-                    word = word[sub_pos:]
-                    text_width -= draw_width
-
-                text_to_draw = word
-                line_x = text_width
-
-        if len(text_to_draw) > 0:
-            if draw:
-                image.fill_text(styled_string.font, text_to_draw, pixie.translate(x, y + offset))
-            offset += int(text_height * styled_string.line_multiplier)
-
-    return y + offset + styled_string.padding_bottom
+    return y + offset + text.padding_bottom
