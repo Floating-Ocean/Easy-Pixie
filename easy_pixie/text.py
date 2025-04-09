@@ -3,13 +3,14 @@ import re
 
 import pixie
 
+from .color import tuple_to_color
 
 _MAX_WIDTH = 1024
 
 
 class StyledString:
     def __init__(self, content: str, font_weight: str, font_size: int,
-                 font_color: tuple[float, ...] | pixie.Color = (0, 0, 0, 1),
+                 font_color: tuple[int, ...] | pixie.Color = (0, 0, 0, 1),
                  line_multiplier: float = 1.0, padding_bottom: int = 0, max_width: int = -1,
                  custom_font_path: str | None = None):
         self.content = content
@@ -26,9 +27,7 @@ class StyledString:
             if type(font_color) == pixie.Color:
                 self.font.paint.color = font_color
             elif len(font_color) == 3:
-                self.font.paint.color = pixie.Color(font_color[0], font_color[1], font_color[2], 1)
-            else:
-                self.font.paint.color = pixie.Color(font_color[0], font_color[1], font_color[2], font_color[3])
+                self.font.paint.color = tuple_to_color(font_color)
         except IOError as e:
             raise IOError(f"无法加载字体文件: {font_path}") from e
 

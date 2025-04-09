@@ -68,5 +68,27 @@ def choose_text_color(bg_color: pixie.Color) -> pixie.Color:
 
 
 def darken_color(color: pixie.Color, ratio: float = 0.7) -> pixie.Color:
+    """
+    降低颜色明度
+    """
     return pixie.Color(color.r * ratio, color.g * ratio, color.b * ratio, color.a)
 
+
+def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
+    """
+    转换 rgb/rgba 元组为 pixie.Color
+    """
+    if len(color) == 3:
+        return pixie.Color(color[0], color[1], color[2], 1)
+    else:
+        return pixie.Color(color[0], color[1], color[2], color[3])
+
+
+def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int, ...]:
+    """
+    转换 pixie.Color 为 rgb/rgba 元组
+    """
+    if include_alpha:
+        return round(color.r * 255), round(color.g * 255), round(color.b * 255), round(color.a * 255)
+    else:
+        return round(color.r * 255), round(color.g * 255), round(color.b * 255)
