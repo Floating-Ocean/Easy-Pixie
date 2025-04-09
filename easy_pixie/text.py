@@ -148,4 +148,4 @@ def draw_text(image: pixie.Image | None, styled_string: StyledString, x: int, y:
                 image.fill_text(styled_string.font, draw_text, pixie.translate(x, y + offset))
             offset += int(text_height * styled_string.line_multiplier)
 
-    return offset + styled_string.padding_bottom
+    return y + offset + styled_string.padding_bottom
