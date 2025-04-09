@@ -41,19 +41,19 @@ def draw_gradient_rect(image: pixie.Image, x: int, y: int, width: int, height: i
         color = pixie.parse_color(colors[idx])
 
         if direction == GradientDirection.VERTICAL:
-            pixie.Vector2(x + width / 2,
-                          y + height * positions[idx])
+            position = pixie.Vector2(x + width / 2,
+                                     y + height * positions[idx])
         elif direction == GradientDirection.HORIZONTAL:
-            pixie.Vector2(x + width * positions[idx],
-                          y + height / 2)
+            position = pixie.Vector2(x + width * positions[idx],
+                                     y + height / 2)
         elif direction == GradientDirection.DIAGONAL_LEFT_TO_RIGHT:
-            pixie.Vector2(x + width * positions[idx],
-                          y + height * positions[idx])
+            position = pixie.Vector2(x + width * positions[idx],
+                                     y + height * positions[idx])
         else:
-            pixie.Vector2(x + width * positions[idx],
-                          y + height * (1.0 - positions[idx]))
+            position = pixie.Vector2(x + width * positions[idx],
+                                     y + height * (1.0 - positions[idx]))
 
-        paint.gradient_handle_positions.append()
+        paint.gradient_handle_positions.append(position)
         paint.gradient_stops.append(pixie.ColorStop(color, idx))
 
     draw_rect(image, paint, x, y, width, height, round_size)
