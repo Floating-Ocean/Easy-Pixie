@@ -85,7 +85,7 @@ def draw_mask_rect(image: pixie.Image, loc: Loc,
     paint_mask = pixie.Paint(pixie.SOLID_PAINT)  # 蒙版画笔
     paint_mask.color = color
     mask = pixie.Image(loc.width, loc.height)
-    draw_rect(mask, paint_mask, loc, round_size)
+    draw_rect(mask, paint_mask, Loc(0, 0, loc.width, loc.height), round_size)
     image.draw(mask, pixie.translate(loc.x, loc.y), blend_mode)
 
 
