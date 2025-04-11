@@ -60,7 +60,7 @@ def _get_ui_gradient_colors() -> list[GradientItem]:
         "color",
         "ui-gradient.json"
     )
-    with open(json_path, 'r') as f:
+    with open(json_path, 'r', encoding='utf-8') as f:
         colors = json.load(f)
     return colors
 
