@@ -2,7 +2,8 @@
 有关颜色的工具类 color.py
 Copyright (c) 2025 Floating Ocean. License under MIT.
 """
-
+import json
+import os
 import random
 from dataclasses import dataclass
 from typing import TypedDict
@@ -51,13 +52,31 @@ class GradientColor:
     name: str
 
 
-def pick_gradient_color(colors: list[GradientItem]) -> GradientColor:
+def _get_ui_gradient_colors() -> list[GradientItem]:
+    colors = []
+    json_path = os.path.join(
+        os.path.dirname(__file__),
+        "data",
+        "color"
+        f'ui-gradient.json'
+    )
+    with open(json_path, 'r') as f:
+        colors = json.load(f)
+    return colors
+
+
+def pick_gradient_color(colors: list[GradientItem] | None) -> GradientColor:
     """
     从渐变色列表中选择一个颜色，只支持 2~3 种颜色
+    列表留空则将从 ui-gradient 中选择
 
     :param colors: 包含 name 和 colors 的字典列表
     :return: 选中的渐变色的颜色列表, 渐变色坐标列表（均匀分布）, 颜色的名称（包含编号）
     """
+
+    if colors is None:
+        colors = _get_ui_gradient_colors()
+
     valid_colors = [color for color in colors if 2 <= len(color['colors']) <= 3]
     if len(valid_colors) == 0:
         raise RuntimeError('No valid colors found')

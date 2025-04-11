@@ -56,6 +56,7 @@ class StyledString:
         font_path = config["custom_font_path"] or os.path.join(
             os.path.dirname(__file__),
             "data",
+            "font"
             f'OPPOSans-{font_weight}.ttf'
         )
 
