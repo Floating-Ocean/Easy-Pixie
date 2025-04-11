@@ -6,7 +6,7 @@ import unittest
 
 import pixie
 
-from easy_pixie import draw_text, StyledString
+from easy_pixie import draw_text, StyledString, pick_gradient_color
 
 
 class Test(unittest.TestCase):
@@ -29,6 +29,14 @@ class Test(unittest.TestCase):
 
         output_img.write_file("test_font.png")
         self.assertIsNotNone(output_img)
+
+    def test_gradient(self):
+        """
+        测试渐变色选取
+        """
+        picked = pick_gradient_color()
+        self.assertIsNotNone(picked)
+        print(picked)
 
 
 if __name__ == '__main__':
