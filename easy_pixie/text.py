@@ -91,7 +91,7 @@ class StyledString:
         self.font.paint.color = font_color
 
 
-def text_size(content: str, font: pixie.Font) -> tuple[int, int]:
+def _text_size(content: str, font: pixie.Font) -> tuple[int, int]:
     """
     获取指定字体下文本的大小
 
@@ -101,24 +101,34 @@ def text_size(content: str, font: pixie.Font) -> tuple[int, int]:
     return bounds.x, bounds.y
 
 
-def calculate_string_width(content: StyledString) -> int:
+def calculate_width(strings: list[StyledString | None] | StyledString) -> int:
     """
-    计算文本在给定字体和大小下的长度（宽度）。
+    计算多个文本的宽度。
 
-    :param content: 要测量的文本内容
-    :return: 文本的宽度（像素）
+    :param strings: 文本
+    :return: 文本的总宽度（像素）
     """
-    text_width, _ = text_size(content.content, content.font)
-    return text_width
+
+    if isinstance(strings, StyledString):
+        strings = [strings]
+
+    width = 0
+    for string in strings:
+        if string:  # 允许传None，降低代码复杂度
+            width += _text_size(string.content, string.font)[0]
+    return width
 
 
-def calculate_height(strings: list[StyledString | None]) -> int:
+def calculate_height(strings: list[StyledString | None] | StyledString) -> int:
     """
     计算多个文本的高度。
 
     :param strings: 文本
-    :return: 总高度
+    :return: 文本的总高度（像素）
     """
+
+    if isinstance(strings, StyledString):
+        strings = [strings]
 
     height = 0
     for string in strings:
@@ -145,7 +155,7 @@ def draw_text(image: pixie.Image | None, text: StyledString, x: int, y: int,
         if draw and image:
             image.fill_text(text.font, token_buffer, pixie.translate(x, y + current_offset))
 
-    def _accumulate_offset():
+    def _accumulate_offset() -> int:
         """获取行高"""
         _text_height = text.font.layout_bounds("A").y
         return int(_text_height * text.line_multiplier)
@@ -155,7 +165,7 @@ def draw_text(image: pixie.Image | None, text: StyledString, x: int, y: int,
         line_width = 0
         split_tokens = [""]
         for token in tokens:
-            text_width = text_size(token, font=text.font)[0]
+            text_width = _text_size(token, font=text.font)[0]
             line_width += text_width
 
             if line_width <= text.max_width:
@@ -166,18 +176,18 @@ def draw_text(image: pixie.Image | None, text: StyledString, x: int, y: int,
 
                 if len(split_tokens) > 1:
                     token = token.lstrip()  # 保证除了第一行，每一行开头不是空格
-                    text_width = text_size(token, font=text.font)[0]
+                    text_width = _text_size(token, font=text.font)[0]
 
                 while text_width > text.max_width:  # 简单的文本分割逻辑，一行塞不下就断开
                     n = text_width // text.max_width
                     cut_pos = int(len(token) // n)
                     split_tokens[-1] = token[:cut_pos]
-                    draw_width = text_size(split_tokens[-1], font=text.font)[0]
+                    draw_width = _text_size(split_tokens[-1], font=text.font)[0]
 
                     while draw_width > text.max_width and cut_pos > 0:  # 微调，保证不溢出
                         cut_pos -= 1
                         split_tokens[-1] = token[:cut_pos]
-                        draw_width = text_size(split_tokens[-1], font=text.font)[0]
+                        draw_width = _text_size(split_tokens[-1], font=text.font)[0]
 
                     split_tokens.append("")
                     token = token[cut_pos:]
