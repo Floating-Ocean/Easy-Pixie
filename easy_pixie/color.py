@@ -98,9 +98,9 @@ def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
     转换 rgb/rgba 元组为 pixie.Color
     """
     if len(color) == 3:
-        return pixie.Color(color[0], color[1], color[2], 1)
+        return pixie.Color(color[0] / 255, color[1] / 255, color[2] / 255, 1)
 
-    return pixie.Color(color[0], color[1], color[2], color[3])
+    return pixie.Color(color[0] / 255, color[1] / 255, color[2] / 255, color[3] / 255)
 
 
 def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int, ...]:
