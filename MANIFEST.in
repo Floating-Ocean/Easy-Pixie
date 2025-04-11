@@ -1,1 +1,2 @@
-recursive-include easy_pixie/data *.ttf
+recursive-include easy_pixie/data/font *.ttf
+recursive-include easy_pixie/data/color *.json
