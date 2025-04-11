@@ -57,15 +57,15 @@ def _get_ui_gradient_colors() -> list[GradientItem]:
     json_path = os.path.join(
         os.path.dirname(__file__),
         "data",
-        "color"
-        f'ui-gradient.json'
+        "color",
+        "ui-gradient.json"
     )
     with open(json_path, 'r') as f:
         colors = json.load(f)
     return colors
 
 
-def pick_gradient_color(colors: list[GradientItem] | None) -> GradientColor:
+def pick_gradient_color(colors: list[GradientItem] | None = None) -> GradientColor:
     """
     从渐变色列表中选择一个颜色，只支持 2~3 种颜色
     列表留空则将从 ui-gradient 中选择
