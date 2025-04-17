@@ -124,10 +124,10 @@ def change_alpha(color: pixie.Color, alpha: int = -1, f_alpha: float = -1) -> pi
     """
     if 0 <= alpha <= 255:
         return pixie.Color(color.r, color.g, color.b, alpha / 255)
-    elif 0 <= f_alpha <= 1:
+    if 0 <= f_alpha <= 1:
         return pixie.Color(color.r, color.g, color.b, f_alpha)
-    else:
-        raise ValueError('Invalid alpha and f_alpha')
+
+    raise ValueError('Invalid alpha and f_alpha')
 
 
 def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
@@ -156,10 +156,9 @@ def hex_to_color(hex_str: str) -> pixie.Color:
     转换 16进制颜色 为 pixie.Color
     """
     if not hex_str.startswith('#'):
-        if len(hex_str) in [3, 4, 6, 8]:
-            hex_str = f"#{hex_str}"
-        else:
+        if len(hex_str) not in [3, 4, 6, 8]:
             raise ValueError('hex_str must be in hex format')
+        hex_str = f"#{hex_str}"
 
     alpha = 1.0
     if len(hex_str) == 5:
@@ -169,10 +168,10 @@ def hex_to_color(hex_str: str) -> pixie.Color:
         alpha = int(hex_str[7:], 16) / 255
         hex_str = hex_str[:7]
 
-    if len(hex_str) in [4, 7]:
-        return change_alpha(pixie.parse_color(hex_str), f_alpha=alpha)
-    else:
+    if len(hex_str) not in [4, 7]:
         raise ValueError('hex_str must be in hex format')
+
+    return change_alpha(pixie.parse_color(hex_str), f_alpha=alpha)
 
 
 def color_to_hex(color: pixie.Color, include_alpha: bool = True) -> str:
@@ -181,7 +180,8 @@ def color_to_hex(color: pixie.Color, include_alpha: bool = True) -> str:
     """
     r, g, b, a = color_to_tuple(color)
     color_hex = f"#{r:02x}{g:02x}{b:02x}{a:02x}"
-    if include_alpha:
-        return color_hex
-    else:
+
+    if not include_alpha:
         return color_hex[:7]
+
+    return color_hex
