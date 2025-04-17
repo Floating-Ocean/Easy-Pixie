@@ -8,7 +8,7 @@ import re
 
 import pixie
 
-from .color import tuple_to_color
+from .color import decode_color_object
 
 _MAX_WIDTH = 1024
 
@@ -49,9 +49,7 @@ class StyledString:
         self.padding_bottom = config["padding_bottom"]
         self.max_width = config["max_width"]
 
-        font_color = config["font_color"]
-        if isinstance(font_color, tuple):
-            font_color = tuple_to_color(font_color)
+        font_color = decode_color_object(config["font_color"])
 
         font_path = config["custom_font_path"] or os.path.join(
             os.path.dirname(__file__),

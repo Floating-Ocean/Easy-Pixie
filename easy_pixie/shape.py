@@ -8,6 +8,7 @@ from enum import Enum
 
 import pixie
 
+from . import decode_color_object
 from .color import apply_tint, GradientColor
 
 
@@ -77,11 +78,12 @@ def draw_gradient_rect(image: pixie.Image, loc: Loc,
     draw_rect(image, paint, loc, round_size)
 
 
-def draw_mask_rect(image: pixie.Image, loc: Loc,
-                   color: pixie.Color, round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
+def draw_mask_rect(image: pixie.Image, loc: Loc, color: pixie.Color | tuple[int, ...],
+                   round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
     """
     绘制一个蒙版矩形，可指定圆角大小
     """
+    color = decode_color_object(color)
     paint_mask = pixie.Paint(pixie.SOLID_PAINT)  # 蒙版画笔
     paint_mask.color = color
     mask = pixie.Image(loc.width, loc.height)
@@ -96,9 +98,11 @@ def load_img(img_path: str) -> pixie.Image:
     return pixie.read_image(img_path)
 
 
-def draw_img(img: pixie.Image, img_to_draw: pixie.Image, loc: Loc, color: pixie.Color):
+def draw_img(img: pixie.Image, img_to_draw: pixie.Image, loc: Loc,
+             color: pixie.Color | tuple[int, ...], replace_alpha: bool = False):
     """
     绘制一个带着色的纯色图片
     """
-    tinted_img = apply_tint(img_to_draw, color).resize(loc.width, loc.height)
+    color = decode_color_object(color)
+    tinted_img = apply_tint(img_to_draw, color, replace_alpha).resize(loc.width, loc.height)
     img.draw(tinted_img, pixie.translate(loc.x, loc.y))

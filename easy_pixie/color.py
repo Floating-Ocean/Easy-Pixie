@@ -185,3 +185,9 @@ def color_to_hex(color: pixie.Color, include_alpha: bool = True) -> str:
         return color_hex[:7]
 
     return color_hex
+
+
+def decode_color_object(color: pixie.Color | tuple[int, ...]) -> pixie.Color:
+    if isinstance(color, tuple):
+        color = tuple_to_color(color)
+    return color
