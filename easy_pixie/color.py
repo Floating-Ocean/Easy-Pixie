@@ -39,6 +39,24 @@ def apply_tint(img: pixie.Image, tint: pixie.Color | tuple[int, ...], ratio: int
     return tinted_image
 
 
+def change_img_alpha(img: pixie.Image, alpha_ratio: float) -> pixie.Image:
+    """
+    更改图片透明度
+
+    :param img          目标图片
+    :param alpha_ratio  更改透明度，<1 则更加透明，>1则更加不透明，对透明像素无影响
+    :return             处理完后的图片
+    """
+    width, height = img.width, img.height
+    tinted_image = pixie.Image(width, height)
+    for x in range(width):
+        for y in range(height):
+            orig_pixel = img.get_color(x, y)
+            mixed_a = orig_pixel.a * alpha_ratio
+            tinted_image.set_color(x, y, change_alpha(orig_pixel.a, mixed_a))
+    return tinted_image
+
+
 class GradientItem(TypedDict):
     """
     单个渐变色
