@@ -12,25 +12,28 @@ import pixie
 
 
 
-def apply_tint(image_path: str, tint: pixie.Color) -> pixie.Image:
+def apply_tint(img: pixie.Image, tint: pixie.Color, ratio: int = 1,
+               replace_alpha: bool = False) -> pixie.Image:
     """
     给图片应用覆盖色
 
-    :param image_path   目标图片位置
-    :param tint         覆盖色
-    :return             处理完后的图片
+    :param img              目标图片
+    :param tint             覆盖色
+    :param ratio            覆盖程度（1为完全覆盖）
+    :param replace_alpha    覆盖透明度
+    :return                 处理完后的图片
     """
-    image = pixie.read_image(image_path)
-    width, height = image.width, image.height
+    width, height = img.width, img.height
     tinted_image = pixie.Image(width, height)
-    alpha = 1
     for x in range(width):
         for y in range(height):
-            orig_pixel = image.get_color(x, y)
-            mixed_r = orig_pixel.r * (1 - alpha) + tint.r * alpha
-            mixed_g = orig_pixel.g * (1 - alpha) + tint.g * alpha
-            mixed_b = orig_pixel.b * (1 - alpha) + tint.b * alpha
-            tinted_image.set_color(x, y, pixie.Color(mixed_r, mixed_g, mixed_b, orig_pixel.a))
+            orig_pixel = img.get_color(x, y)
+            mixed_r = orig_pixel.r * (1 - ratio) + tint.r * ratio
+            mixed_g = orig_pixel.g * (1 - ratio) + tint.g * ratio
+            mixed_b = orig_pixel.b * (1 - ratio) + tint.b * ratio
+            mixed_a = orig_pixel.a * (1 - ratio) + tint.a * ratio
+            tinted_image.set_color(x, y, pixie.Color(mixed_r, mixed_g, mixed_b,
+                                                     mixed_a if replace_alpha else orig_pixel.a))
     return tinted_image
 
 
@@ -53,7 +56,6 @@ class GradientColor:
 
 
 def _get_ui_gradient_colors() -> list[GradientItem]:
-    colors = []
     json_path = os.path.join(
         os.path.dirname(__file__),
         "data",
@@ -112,6 +114,22 @@ def darken_color(color: pixie.Color, ratio: float = 0.7) -> pixie.Color:
     return pixie.Color(color.r * ratio, color.g * ratio, color.b * ratio, color.a)
 
 
+def change_alpha(color: pixie.Color, alpha: int = -1, f_alpha: float = -1) -> pixie.Color:
+    """
+    替换 color 中的 alpha 值，alpha 和 f_alpha 二选一，前者优先
+    :param color: 待替换颜色
+    :param alpha: 整数 alpha 值 (0~255)
+    :param f_alpha: 浮点数 alpha 值 (0~1)
+    :return: 替换后的颜色
+    """
+    if 0 <= alpha <= 255:
+        return pixie.Color(color.r, color.g, color.b, alpha / 255)
+    elif 0 <= f_alpha <= 1:
+        return pixie.Color(color.r, color.g, color.b, f_alpha)
+    else:
+        raise ValueError('Invalid alpha and f_alpha')
+
+
 def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
     """
     转换 rgb/rgba 元组为 pixie.Color
@@ -131,3 +149,39 @@ def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int,
                 round(color.a * 255))
 
     return round(color.r * 255), round(color.g * 255), round(color.b * 255)
+
+
+def hex_to_color(hex_str: str) -> pixie.Color:
+    """
+    转换 16进制颜色 为 pixie.Color
+    """
+    if not hex_str.startswith('#'):
+        if len(hex_str) in [3, 4, 6, 8]:
+            hex_str = f"#{hex_str}"
+        else:
+            raise ValueError('hex_str must be in hex format')
+
+    alpha = 1.0
+    if len(hex_str) == 5:
+        alpha = int(f"{hex_str[4:]}{hex_str[4:]}", 16) / 255
+        hex_str = hex_str[:4]
+    elif len(hex_str) == 9:
+        alpha = int(hex_str[7:], 16) / 255
+        hex_str = hex_str[:7]
+
+    if len(hex_str) in [4, 7]:
+        return change_alpha(pixie.parse_color(hex_str), f_alpha=alpha)
+    else:
+        raise ValueError('hex_str must be in hex format')
+
+
+def color_to_hex(color: pixie.Color, include_alpha: bool = True) -> str:
+    """
+    转换 pixie.Color 为 rgb/rgba 元组
+    """
+    r, g, b, a = color_to_tuple(color)
+    color_hex = f"#{r:02x}{g:02x}{b:02x}{a:02x}"
+    if include_alpha:
+        return color_hex
+    else:
+        return color_hex[:7]

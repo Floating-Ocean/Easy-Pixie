@@ -89,9 +89,16 @@ def draw_mask_rect(image: pixie.Image, loc: Loc,
     image.draw(mask, pixie.translate(loc.x, loc.y), blend_mode)
 
 
-def draw_img(img: pixie.Image, img_path: str, loc: Loc, color: pixie.Color):
+def load_img(img_path: str) -> pixie.Image:
+    """
+    加载图片
+    """
+    return pixie.read_image(img_path)
+
+
+def draw_img(img: pixie.Image, img_to_draw: pixie.Image, loc: Loc, color: pixie.Color):
     """
     绘制一个带着色的纯色图片
     """
-    tinted_img = apply_tint(img_path, color).resize(loc.width, loc.height)
+    tinted_img = apply_tint(img_to_draw, color).resize(loc.width, loc.height)
     img.draw(tinted_img, pixie.translate(loc.x, loc.y))

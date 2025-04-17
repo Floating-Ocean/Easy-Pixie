@@ -6,7 +6,7 @@ import unittest
 
 import pixie
 
-from easy_pixie import draw_text, StyledString, pick_gradient_color
+from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex
 
 
 class Test(unittest.TestCase):
@@ -37,6 +37,32 @@ class Test(unittest.TestCase):
         picked = pick_gradient_color()
         self.assertIsNotNone(picked)
         print(picked)
+
+    def test_color_type_transform(self):
+        """
+        测试不同类型颜色代码互转
+        """
+        color_hex_3 = "FFF"
+        color_hex_4 = "#FFF"
+        color_hex_4a = "FFFF"
+        color_hex_5 = "#FFFF"
+        color_hex_6 = "FFFFFF"
+        color_hex_7 = "#FFFFFF"
+        color_hex_8 = "FFFFFFFF"
+        color_hex_9 = "#FFFFFFFF"
+        for color_hex in [
+            color_hex_3, color_hex_4, color_hex_4a,
+            color_hex_5, color_hex_6, color_hex_7,
+            color_hex_8, color_hex_9
+        ]:
+            print(f"Testing color type transform: {color_hex}")
+            color_pixie = hex_to_color(color_hex)
+            self.assertIsNotNone(color_pixie)
+            print(f"Transformed pixie color: pixie.Color({color_pixie.r}. {color_pixie.g}, "
+                  f"{color_pixie.r}, {color_pixie.a})")
+            self.assertEqual(color_pixie, pixie.Color(1, 1, 1, 1))
+            color_re_hex = color_to_hex(color_pixie)
+            print(f"Retransformed hex color: {color_re_hex}\n")
 
 
 if __name__ == '__main__':
