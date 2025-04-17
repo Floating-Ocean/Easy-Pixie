@@ -188,6 +188,9 @@ def color_to_hex(color: pixie.Color, include_alpha: bool = True) -> str:
 
 
 def decode_color_object(color: pixie.Color | tuple[int, ...]) -> pixie.Color:
+    """
+    解析 union 为 pixie.Color
+    """
     if isinstance(color, tuple):
         color = tuple_to_color(color)
     return color

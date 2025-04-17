@@ -8,8 +8,7 @@ from enum import Enum
 
 import pixie
 
-from . import decode_color_object
-from .color import apply_tint, GradientColor
+from .color import apply_tint, decode_color_object, GradientColor
 
 
 @dataclass
