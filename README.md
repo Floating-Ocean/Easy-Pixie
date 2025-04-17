@@ -4,7 +4,7 @@
 </div><br>
 
 <div align="center">
-  <a href="https://github.com/qwedc001/Peeper-Board-Generator/blob/master/requirements.txt"><img alt="Supported Python Version" src="https://img.shields.io/badge/Python-3.10+-teal?style=flat-square"></a>
+  <img alt="Supported Python Version" src="https://img.shields.io/badge/Python-3.10+-teal?style=flat-square">
   <a href="https://github.com/Floating-Ocean/Easy-Pixie/actions/workflows/python-publish.yml"><img alt="CodeQL Scan" src="https://img.shields.io/github/actions/workflow/status/Floating-Ocean/Easy-Pixie/python-publish.yml?style=flat-square&label=pypi-deploy"></a>
   <a href="https://github.com/Floating-Ocean/Easy-Pixie/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/Floating-Ocean/Easy-Pixie?style=flat-square&label=Easy-Pixie"></a>
   <a href="https://github.com/Floating-Ocean/Easy-Pixie/commits"><img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/Floating-Ocean/Easy-Pixie?style=flat-square"></a>
