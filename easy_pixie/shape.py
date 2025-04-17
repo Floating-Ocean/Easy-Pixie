@@ -8,7 +8,7 @@ from enum import Enum
 
 import pixie
 
-from .color import apply_tint, decode_color_object, GradientColor
+from .color import decode_color_object, GradientColor
 
 
 @dataclass
@@ -20,11 +20,11 @@ class Loc:
     height: int
 
 
-def draw_rect(image: pixie.Image, paint: pixie.Paint, loc: Loc, round_size: float = 0):
+def draw_rect(img: pixie.Image, paint: pixie.Paint, loc: Loc, round_size: float = 0):
     """
     绘制一个矩形，可指定圆角大小
     """
-    ctx = image.new_context()
+    ctx = img.new_context()
     ctx.fill_style = paint
     ctx.rounded_rect(loc.x, loc.y, loc.width, loc.height,
                      round_size, round_size, round_size, round_size)
@@ -46,7 +46,7 @@ class GradientDirection(Enum):
     DIAGONAL_RIGHT_TO_LEFT = 3
 
 
-def draw_gradient_rect(image: pixie.Image, loc: Loc,
+def draw_gradient_rect(img: pixie.Image, loc: Loc,
                        colors: GradientColor, direction: GradientDirection,
                        round_size: float = 0):
     """
@@ -74,10 +74,10 @@ def draw_gradient_rect(image: pixie.Image, loc: Loc,
         paint.gradient_handle_positions.append(position)
         paint.gradient_stops.append(pixie.ColorStop(color, idx))
 
-    draw_rect(image, paint, loc, round_size)
+    draw_rect(img, paint, loc, round_size)
 
 
-def draw_mask_rect(image: pixie.Image, loc: Loc, color: pixie.Color | tuple[int, ...],
+def draw_mask_rect(img: pixie.Image, loc: Loc, color: pixie.Color | tuple[int, ...],
                    round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
     """
     绘制一个蒙版矩形，可指定圆角大小
@@ -87,7 +87,15 @@ def draw_mask_rect(image: pixie.Image, loc: Loc, color: pixie.Color | tuple[int,
     paint_mask.color = color
     mask = pixie.Image(loc.width, loc.height)
     draw_rect(mask, paint_mask, Loc(0, 0, loc.width, loc.height), round_size)
-    image.draw(mask, pixie.translate(loc.x, loc.y), blend_mode)
+    img.draw(mask, pixie.translate(loc.x, loc.y), blend_mode)
+
+
+def draw_full(img: pixie.Image, color: pixie.Color | tuple[int, ...]):
+    """
+    覆盖整个图片为一个颜色
+    """
+    color = decode_color_object(color)
+    img.fill(color)
 
 
 def load_img(img_path: str) -> pixie.Image:
@@ -97,11 +105,9 @@ def load_img(img_path: str) -> pixie.Image:
     return pixie.read_image(img_path)
 
 
-def draw_img(img: pixie.Image, img_to_draw: pixie.Image, loc: Loc,
-             color: pixie.Color | tuple[int, ...], replace_alpha: bool = False):
+def draw_img(img: pixie.Image, img_to_draw: pixie.Image, loc: Loc):
     """
     绘制一个带着色的纯色图片
     """
-    color = decode_color_object(color)
-    tinted_img = apply_tint(img_to_draw, color, replace_alpha).resize(loc.width, loc.height)
+    tinted_img = img_to_draw.resize(loc.width, loc.height)
     img.draw(tinted_img, pixie.translate(loc.x, loc.y))

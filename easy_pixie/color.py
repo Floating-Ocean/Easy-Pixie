@@ -2,6 +2,7 @@
 有关颜色的工具类 color.py
 Copyright (c) 2025 Floating Ocean. License under MIT.
 """
+
 import json
 import os
 import random
@@ -12,7 +13,7 @@ import pixie
 
 
 
-def apply_tint(img: pixie.Image, tint: pixie.Color, ratio: int = 1,
+def apply_tint(img: pixie.Image, tint: pixie.Color | tuple[int, ...], ratio: int = 1,
                replace_alpha: bool = False) -> pixie.Image:
     """
     给图片应用覆盖色
@@ -23,6 +24,7 @@ def apply_tint(img: pixie.Image, tint: pixie.Color, ratio: int = 1,
     :param replace_alpha    覆盖透明度
     :return                 处理完后的图片
     """
+    tint = decode_color_object(tint)
     width, height = img.width, img.height
     tinted_image = pixie.Image(width, height)
     for x in range(width):
@@ -96,25 +98,29 @@ def pick_gradient_color(colors: list[GradientItem] | None = None) -> GradientCol
     return GradientColor(picked_colors, position_list, color_name)
 
 
-def choose_text_color(bg_color: pixie.Color) -> pixie.Color:
+def choose_text_color(bg_color: pixie.Color | tuple[int, ...]) -> pixie.Color:
     """
     根据背景颜色的明度选择合适的字体颜色
 
     :return: 白 / 黑
     """
+    bg_color = decode_color_object(bg_color)
     luminance = 0.299 * bg_color.r + 0.587 * bg_color.g + 0.114 * bg_color.b
     return (pixie.Color(0.0706, 0.0706, 0.0706, 1) if luminance > 0.502 else
             pixie.Color(0.9882, 0.9882, 0.9882, 1))
 
 
-def darken_color(color: pixie.Color, ratio: float = 0.7) -> pixie.Color:
+def darken_color(color: pixie.Color | tuple[int, ...],
+                 ratio: float = 0.7) -> pixie.Color:
     """
     降低颜色明度
     """
+    color = decode_color_object(color)
     return pixie.Color(color.r * ratio, color.g * ratio, color.b * ratio, color.a)
 
 
-def change_alpha(color: pixie.Color, alpha: int = -1, f_alpha: float = -1) -> pixie.Color:
+def change_alpha(color: pixie.Color | tuple[int, ...],
+                 alpha: int = -1, f_alpha: float = -1) -> pixie.Color:
     """
     替换 color 中的 alpha 值，alpha 和 f_alpha 二选一，前者优先
     :param color: 待替换颜色
@@ -122,6 +128,7 @@ def change_alpha(color: pixie.Color, alpha: int = -1, f_alpha: float = -1) -> pi
     :param f_alpha: 浮点数 alpha 值 (0~1)
     :return: 替换后的颜色
     """
+    color = decode_color_object(color)
     if 0 <= alpha <= 255:
         return pixie.Color(color.r, color.g, color.b, alpha / 255)
     if 0 <= f_alpha <= 1:
