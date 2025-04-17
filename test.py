@@ -6,7 +6,8 @@ import unittest
 
 import pixie
 
-from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex
+from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex, load_img, \
+    change_img_alpha
 
 
 class Test(unittest.TestCase):
@@ -29,6 +30,12 @@ class Test(unittest.TestCase):
 
         output_img.write_file("test_font.png")
         self.assertIsNotNone(output_img)
+
+        loaded_img = load_img("test_font.png")
+        img_alpha = change_img_alpha(loaded_img, 100 / 255)
+        img_alpha.write_file("test_font_alpha.png")
+        self.assertIsNotNone(img_alpha)
+
 
     def test_gradient(self):
         """

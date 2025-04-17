@@ -53,7 +53,7 @@ def change_img_alpha(img: pixie.Image, alpha_ratio: float) -> pixie.Image:
         for y in range(height):
             orig_pixel = img.get_color(x, y)
             mixed_a = orig_pixel.a * alpha_ratio
-            tinted_image.set_color(x, y, change_alpha(orig_pixel.a, mixed_a))
+            tinted_image.set_color(x, y, change_alpha(orig_pixel, f_alpha=mixed_a))
     return tinted_image
 
 
