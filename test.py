@@ -6,8 +6,8 @@ import unittest
 
 import pixie
 
-from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex, load_img, \
-    change_img_alpha
+from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex, \
+    load_img, change_img_alpha
 
 
 class Test(unittest.TestCase):
