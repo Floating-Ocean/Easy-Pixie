@@ -133,8 +133,26 @@ def darken_color(color: pixie.Color | tuple[int, ...],
     """
     降低颜色明度
     """
+    if ratio > 1:
+        raise ValueError('ratio must be [0, 1]')
+
     color = decode_color_object(color)
     return pixie.Color(color.r * ratio, color.g * ratio, color.b * ratio, color.a)
+
+
+def lighten_color(color: pixie.Color | tuple[int, ...],
+                  ratio: float = 0.7) -> pixie.Color:
+    """
+    提高颜色明度
+    """
+    if ratio > 1:
+        raise ValueError('ratio must be [0, 1]')
+
+    color = decode_color_object(color)
+    return pixie.Color(color.r + (1 - color.r) * ratio,
+                       color.g + (1 - color.g) * ratio,
+                       color.b + (1 - color.b) * ratio,
+                       color.a)
 
 
 def change_alpha(color: pixie.Color | tuple[int, ...],
