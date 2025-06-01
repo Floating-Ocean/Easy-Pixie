@@ -8,7 +8,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
 setuptools.setup(name="Easy-Pixie",
-                 version="0.0.6",
+                 version="0.0.7",
                  author="Floating Ocean",
                  author_email="sea113290980@gmail.com",
                  description="A tool to simplify the use of python graphic library pixie-python.",
