@@ -7,7 +7,8 @@ import unittest
 import pixie
 
 from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex, \
-    load_img, change_img_alpha, lighten_color, change_alpha, draw_gradient_rect, Loc, GradientDirection
+    load_img, change_img_alpha, lighten_color, change_alpha, draw_gradient_rect, Loc, \
+    GradientDirection
 
 
 class Test(unittest.TestCase):
