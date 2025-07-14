@@ -56,7 +56,8 @@ def draw_gradient_rect(img: pixie.Image, loc: Loc,
                         pixie.RADIAL_GRADIENT_PAINT)  # 渐变色画笔
 
     for idx, raw_color in enumerate(colors.color_list):
-        color = pixie.parse_color(raw_color)
+        color = (pixie.parse_color(raw_color) if isinstance(raw_color, str) else
+                 decode_color_object(raw_color))
 
         if direction == GradientDirection.VERTICAL:
             position = pixie.Vector2(loc.x + loc.width / 2,

@@ -34,7 +34,7 @@
   },
   {
     "name": "Purple Dream",
-    "colors": ["#bf5ae0","#a811da"]
+    "colors": ["#bf5ae0", "#a811da"]
   },
   {
     "name": "Blu",
@@ -110,7 +110,7 @@
   },
   {
     "name": "Sky",
-    "colors": ["#076585", "#fff"]
+    "colors": ["#076585", "#ffffff"]
   },
   {
     "name": "Sel",
@@ -942,7 +942,6 @@
   {
     "name": "Jodhpur",
     "colors": ["#9CECFB", "#65C7F7", "#0052D4"]
-
   },
   {
     "name": "Cocoaa Ice",
@@ -1133,24 +1132,12 @@
     "colors": ["#e1eec3", "#f05053"]
   },
   {
-    "name": "Zinc",
-    "colors": ["#ADA996", "#F2F2F2", "#DBDBDB", "#EAEAEA"]
-  },
-  {
-    "name": "Hydrogen",
-    "colors": ["#667db6", "#0082c8", "#0082c8", "#667db6"]
-  },
-  {
-    "name": "Argon",
-    "colors": ["#03001e", "#7303c0", "#ec38bc", "#fdeff9"]
-  },
-  {
     "name": "Lithium",
     "colors": ["#6D6027", "#D3CBB8"]
   },
   {
     "name": "Digital Water",
-    "colors": ["#74ebd5","#ACB6E5"]
+    "colors": ["#74ebd5", "#ACB6E5"]
   },
   {
     "name": "Orange Fun",
@@ -1177,7 +1164,6 @@
     "colors": ["#D3CCE3", "#E9E4F0"]
   },
   {
-
     "name": "Ohhappiness",
     "colors": ["#00b09b", "#96c93d"]
   },
@@ -1383,7 +1369,7 @@
   },
   {
     "name": "Grade Grey",
-    "colors": ["#bdc3c7","#2c3e50"]
+    "colors": ["#bdc3c7", "#2c3e50"]
   },
   {
     "name": "Telko",
@@ -1391,15 +1377,7 @@
   },
   {
     "name": "Zenta",
-    "colors": ["#2A2D3E","#FECB6E"]
-  },
-  {
-    "name": "Electric Peacock",
-    "colors": ["#8a2be2","#0000cd","#228b22","#ccff00"]
-  },
-  {
-    "name": "Under Blue Green",
-    "colors": ["#051937","#004d7a","#008793","#00bf72","#a8eb12"]
+    "colors": ["#2A2D3E", "#FECB6E"]
   },
   {
     "name": "Lensod",
@@ -1407,7 +1385,7 @@
   },
   {
     "name": "Newspaper",
-    "colors": ["#8a2be2","#ffa500","#f8f8ff"]
+    "colors": ["#8a2be2", "#ffa500", "#f8f8ff"]
   },
   {
     "name": "Dark Blue Gradient",
@@ -1415,11 +1393,11 @@
   },
   {
     "name": "Dark Blu Two",
-    "colors": ["#004680","#4484BA"]
+    "colors": ["#004680", "#4484BA"]
   },
   {
     "name": "Lemon Lime",
-    "colors":["#7ec6bc","#ebe717"]
+    "colors":["#7ec6bc", "#ebe717"]
   },
   {
     "name": "Beleko",
@@ -1427,11 +1405,11 @@
   },
   {
     "name": "Mango Papaya",
-    "colors": ["#de8a41","#2ada53"]
+    "colors": ["#de8a41", "#2ada53"]
   },
   {
     "name": "Unicorn Rainbow",
-    "colors": ["#f7f0ac","#acf7f0","#f0acf7"]
+    "colors": ["#f7f0ac", "#acf7f0", "#f0acf7"]
   },
   {
     "name": "Flame",
@@ -1462,28 +1440,20 @@
     "colors": ["#DCFFBD", "#CC86D1"]
   },
   {
-    "name": "Elate The Euge",
-    "colors": ["#8BDEDA", "43ADD0", "998EE0", "E17DC2", "EF9393"]
-  },
-  {
     "name": "Peach Sea",
     "colors": ["#E6AE8C", "#A8CECF"]
   },
   {
     "name": "Abbas",
-    "colors": ["#00fff0","#0083fe"]
+    "colors": ["#00fff0", "#0083fe"]
   },
   {
     "name": "Winter Woods",
     "colors": ["#333333", "#a2ab58", "#A43931"]
   },
   {
-    "name": "Ameena",
-    "colors": ["#0c0c6d", "#de512b", "#98d0c1", "#5bb226", "#023c0d"]
-  },
-  {
     "name": "Emerald Sea",
-    "colors": ["#05386b","#5cdb95"]
+    "colors": ["#05386b", "#5cdb95"]
   },
   {
     "name": "Bleem",
@@ -1506,20 +1476,12 @@
     "colors": ["#152331", "#000000"]
   },
   {
-    "name": "Whinehouse",
-    "colors": ["#f7f7f7", "#b9a0a0", "#794747", "#4e2020", "#111111"]
-  },
-  {
     "name": "Hyper Blue",
     "colors": ["#59CDE9", "#0A2A88"]
   },
   {
     "name": "Racker",
-    "colors": ["#EB0000","#95008A","#3300FC"]
-  },
-  {
-    "name": "After the Rain",
-    "colors": ["#ff75c3", "#ffa647", "#ffe83f", "#9fff5b", "#70e2ff", "#cd93ff"]
+    "colors": ["#EB0000", "#95008A", "#3300FC"]
   },
   {
     "name": "Neon Green",
@@ -1532,5 +1494,97 @@
   {
     "name": "Visual Blue",
     "colors": ["#003d4d", "#00c996"]
+  },
+  {
+    "name": "Cold to Hot Sweetness",
+    "colors": ["#62FFFF", "#C838F8"]
+  },
+  {
+    "name": "Sea Breeze",
+    "colors": ["#57a0ae", "#aedcdf"]
+  },
+  {
+    "name": "Universe",
+    "colors": ["#02172D", "#000115", "#1B0E3A"]
+  },
+  {
+    "name": "True Nature",
+    "colors": ["#2b602d", "#98bc62"]
+  },
+  {
+    "name": "Reconnection",
+    "colors": ["#f1eaff", "#ebc8f8", "#b3c5f9"]
+  },
+  {
+    "name": "Paleta De Cor",
+    "colors": ["#121212", "#eaeaea"]
+  },
+  {
+    "name": "Magic Wool",
+    "colors": ["#CFD9E0", "#E9E5F4", "#B8B1C4"]
+  },
+  {
+    "name": "Olamify",
+    "colors": ["#531065", "#75148F"]
+  },
+  {
+    "name": "Blue Orange",
+    "colors": ["#023047", "#f3f9fc", "#fb8414"]
+  },
+  {
+    "name": "Green Vogue Tomato",
+    "colors": ["#032059", "#f26444"]
+  },
+  {
+    "name": "CTlane",
+    "colors": ["#FFF6C8", "#FFD7F5", "#DED6FB"]
+  },
+  {
+    "name": "E Fine",
+    "colors": ["#E07936", "#CB2951", "#580AB7"]
+  },
+  {
+    "name": "SDU red",
+    "colors": ["#ca0d0d", "#9b0d14"]
+  },
+  {
+    "name": "Akifgreen",
+    "colors": ["#2dfd41", "#ffffff"]
+  },
+  {
+    "name": "Campy",
+    "colors": ["#86c1ff", "#4f6f66", "#606958"]
+  },
+  {
+    "name": "Goods Car",
+    "colors": ["#ff1055", "#FF8D57"]
+  },
+  {
+    "name": "Morning Blues",
+    "colors": ["#001f3f", "#00b5ad"]
+  },
+  {
+    "name": "Aquatic",
+    "colors": ["#00d2ff", "#f0f0f0"]
+  },
+  {
+    "name": "Fed Pol Blue",
+    "colors": ["#F27121","#061161"]
+  },
+  {
+    "name": "Maulop",
+    "colors": ["#3d3d3c", "#FFFFFF", "#273889"]
+  },
+  {
+    "name": "Purple Fusion",
+    "colors": ["#6b54a2", "#8F7FB7"]
+  },
+  {
+    "name": "Lavender Dream",
+    "colors": ["#6b54a2", "#AFA3CD"]
+  },
+  {
+    "name": "KurdLab",
+    "colors": ["#00c0ff", "#1de9b6"]
   }
 ]

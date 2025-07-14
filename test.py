@@ -7,7 +7,7 @@ import unittest
 import pixie
 
 from easy_pixie import draw_text, StyledString, pick_gradient_color, hex_to_color, color_to_hex, \
-    load_img, change_img_alpha, lighten_color
+    load_img, change_img_alpha, lighten_color, change_alpha, draw_gradient_rect, Loc, GradientDirection
 
 
 class Test(unittest.TestCase):
@@ -89,6 +89,20 @@ class Test(unittest.TestCase):
         draw_text(output_img, text, 32, 32)
 
         output_img.write_file("test_color_lighten.png")
+        self.assertIsNotNone(output_img)
+
+    def test_gradient_with_opacity(self):
+        """
+        测试带有透明度的渐变色
+        """
+        output_img = pixie.Image(1024, 320)
+        output_img.fill(pixie.Color(1, 1, 1, 1))
+        picked = pick_gradient_color()
+        picked.color_list[0] = change_alpha(pixie.parse_color(picked.color_list[0]), 20)
+        picked.color_list[1] = change_alpha(pixie.parse_color(picked.color_list[1]), 20)
+        draw_gradient_rect(output_img, Loc(20, 20, 256, 256),
+                           picked, GradientDirection.HORIZONTAL, 26)
+        output_img.write_file("test_gradient_with_opacity.png")
         self.assertIsNotNone(output_img)
 
 

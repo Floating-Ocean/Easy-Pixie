@@ -70,7 +70,7 @@ class GradientColor:
     """
     打包后的单个渐变色数据类
     """
-    color_list: list[str]
+    color_list: list[str | tuple | pixie.Color]
     pos_list: list[float]
     name: str
 
