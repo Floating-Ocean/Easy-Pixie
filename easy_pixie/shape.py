@@ -1,14 +1,17 @@
 """
 有关图形的工具类 shape.py
-Copyright (c) 2025 Floating Ocean. License under MIT.
+Copyright (c) 2025-2026 Floating Ocean. License under MIT.
 """
 
 from dataclasses import dataclass
 from enum import Enum
+from typing import TypeAlias
 
 import pixie
 
 from .color import decode_color_object, GradientColor
+
+ThreeOrFourInts: TypeAlias = tuple[int, int, int] | tuple[int, int, int, int]
 
 
 @dataclass
@@ -78,7 +81,7 @@ def draw_gradient_rect(img: pixie.Image, loc: Loc,
     draw_rect(img, paint, loc, round_size)
 
 
-def draw_mask_rect(img: pixie.Image, loc: Loc, color: pixie.Color | tuple[int, ...],
+def draw_mask_rect(img: pixie.Image, loc: Loc, color: pixie.Color | ThreeOrFourInts,
                    round_size: float = 0, blend_mode: int = pixie.NORMAL_BLEND):
     """
     绘制一个蒙版矩形，可指定圆角大小
@@ -91,7 +94,7 @@ def draw_mask_rect(img: pixie.Image, loc: Loc, color: pixie.Color | tuple[int, .
     img.draw(mask, pixie.translate(loc.x, loc.y), blend_mode)
 
 
-def draw_full(img: pixie.Image, color: pixie.Color | tuple[int, ...]):
+def draw_full(img: pixie.Image, color: pixie.Color | ThreeOrFourInts):
     """
     覆盖整个图片为一个颜色
     """

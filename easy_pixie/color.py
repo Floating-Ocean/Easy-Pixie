@@ -1,19 +1,20 @@
 """
 有关颜色的工具类 color.py
-Copyright (c) 2025 Floating Ocean. License under MIT.
+Copyright (c) 2025-2026 Floating Ocean. License under MIT.
 """
 
 import json
 import os
 import random
 from dataclasses import dataclass
-from typing import TypedDict
+from typing import TypedDict, TypeAlias
 
 import pixie
 
+ThreeOrFourInts: TypeAlias = tuple[int, int, int] | tuple[int, int, int, int]
 
 
-def apply_tint(img: pixie.Image, tint: pixie.Color | tuple[int, ...], ratio: int = 1,
+def apply_tint(img: pixie.Image, tint: pixie.Color | ThreeOrFourInts, ratio: int = 1,
                replace_alpha: bool = False) -> pixie.Image:
     """
     给图片应用覆盖色
@@ -116,7 +117,7 @@ def pick_gradient_color(colors: list[GradientItem] | None = None) -> GradientCol
     return GradientColor(picked_colors, position_list, color_name)
 
 
-def choose_text_color(bg_color: pixie.Color | tuple[int, ...]) -> pixie.Color:
+def choose_text_color(bg_color: pixie.Color | ThreeOrFourInts) -> pixie.Color:
     """
     根据背景颜色的明度选择合适的字体颜色
 
@@ -128,7 +129,7 @@ def choose_text_color(bg_color: pixie.Color | tuple[int, ...]) -> pixie.Color:
             pixie.Color(0.9882, 0.9882, 0.9882, 1))
 
 
-def darken_color(color: pixie.Color | tuple[int, ...],
+def darken_color(color: pixie.Color | ThreeOrFourInts,
                  ratio: float = 0.7) -> pixie.Color:
     """
     降低颜色明度
@@ -140,7 +141,7 @@ def darken_color(color: pixie.Color | tuple[int, ...],
     return pixie.Color(color.r * ratio, color.g * ratio, color.b * ratio, color.a)
 
 
-def lighten_color(color: pixie.Color | tuple[int, ...],
+def lighten_color(color: pixie.Color | ThreeOrFourInts,
                   ratio: float = 0.7) -> pixie.Color:
     """
     提高颜色明度
@@ -155,7 +156,7 @@ def lighten_color(color: pixie.Color | tuple[int, ...],
                        color.a)
 
 
-def change_alpha(color: pixie.Color | tuple[int, ...],
+def change_alpha(color: pixie.Color | ThreeOrFourInts,
                  alpha: int = -1, f_alpha: float = -1) -> pixie.Color:
     """
     替换 color 中的 alpha 值，alpha 和 f_alpha 二选一，前者优先
@@ -173,7 +174,7 @@ def change_alpha(color: pixie.Color | tuple[int, ...],
     raise ValueError('Invalid alpha and f_alpha')
 
 
-def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
+def tuple_to_color(color: ThreeOrFourInts) -> pixie.Color:
     """
     转换 rgb/rgba 元组为 pixie.Color
     """
@@ -183,7 +184,7 @@ def tuple_to_color(color: tuple[int, ...]) -> pixie.Color:
     return pixie.Color(color[0] / 255, color[1] / 255, color[2] / 255, color[3] / 255)
 
 
-def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> tuple[int, ...]:
+def color_to_tuple(color: pixie.Color, include_alpha: bool = True) -> ThreeOrFourInts:
     """
     转换 pixie.Color 为 rgb/rgba 元组
     """
@@ -230,7 +231,7 @@ def color_to_hex(color: pixie.Color, include_alpha: bool = True) -> str:
     return color_hex
 
 
-def decode_color_object(color: pixie.Color | tuple[int, ...]) -> pixie.Color:
+def decode_color_object(color: pixie.Color | ThreeOrFourInts) -> pixie.Color:
     """
     解析 union 为 pixie.Color
     """
