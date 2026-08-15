@@ -12,6 +12,32 @@ from .color import decode_color_object
 
 _MAX_WIDTH = 1024
 
+# 字体缓存：路径 -> pixie.Typeface
+_FONT_CACHE: dict[str, pixie.Typeface] = {}
+
+
+def _get_font(font_path: str) -> pixie.Font:
+    """从缓存中获取字体（每次返回独立的 Font，可安全修改字号/颜色）。"""
+    if font_path not in _FONT_CACHE:
+        try:
+            _FONT_CACHE[font_path] = pixie.read_typeface(font_path)
+        except IOError as e:
+            raise IOError(f"无法加载字体文件: {font_path}") from e
+    return _FONT_CACHE[font_path].new_font()
+
+
+def clear_font_cache(font_path: str | None = None):
+    """
+    清除字体缓存。
+
+    :param font_path: 指定字体路径则只清除该字体的缓存；为 None 则清除全部缓存。
+    在字体文件被替换/更新后调用，可强制下次加载时重新读取磁盘。
+    """
+    if font_path is None:
+        _FONT_CACHE.clear()
+    else:
+        _FONT_CACHE.pop(font_path, None)
+
 
 class StyledString:
     """包装类，打包文本绘制参数"""
@@ -76,10 +102,7 @@ class StyledString:
         设置字体
         注意，设置字体后，字体大小和颜色信息会丢失
         """
-        try:
-            self.font = pixie.read_font(font_path)
-        except IOError as e:
-            raise IOError(f"无法加载字体文件: {font_path}") from e
+        self.font = _get_font(font_path)
 
     def set_font_size(self, font_size: int):
         """设置字体大小"""
